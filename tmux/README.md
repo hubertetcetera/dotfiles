@@ -13,36 +13,54 @@ sudo apt install tmux
 sudo pacman -S tmux
 ```
 
-2. **Download and apply config**
+2. **Clone this repo**
 
 ```bash
-mkdir -p ~/.config/tmux
-curl -fsSL https://raw.githubusercontent.com/hubertetcetera/dotfiles/refs/heads/main/tmux/tmux.conf -o ~/.config/tmux/tmux.conf
+git clone https://github.com/hubertetcetera/dotfiles.git ~/dotfiles
+cd ~/dotfiles
 ```
 
-_(If you prefer the classic location, symlink it to ~/.tmux.conf)_
+3. **Install GNU Stow**
 
 ```bash
-ln -s ~/.config/tmux/tmux.conf ~/.tmux.conf
+# macOS
+brew install stow
+
+# Debian/Ubuntu
+sudo apt install stow
+
+# Arch
+sudo pacman -S stow
 ```
 
-3. **Install TPM (Tmux Plugin Manager)**
+4. **Deploy tmux config**
+
+```bash
+stow tmux
+```
+
+This will create a symlink from `~/.config/tmux/tmux.conf` to `~/dotfiles/tmux/tmux.conf`.
+
+```bash
+~/.config/tmux/tmux.conf -> ~/dotfiles/tmux/tmux.conf
+```
+
+5. **Install TPM (Tmux Plugin Manager)**
 
 ```bash
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 ```
 
-4. **Start tmux and install plugins**
+6. **Start tmux and install plugins**
+   Inside tmux, press:
 
 ```bash
 prefix + I
 ```
 
-(default prefix is `Ctrl+b` but it is mapped to `Ctrl+A` for this config, unless you changed it).
-This will clone and install all plugins listed in the config.
+(Default prefix is Ctrl+a in this config.)
 
-5. **Reload config**
-   Either restart tmux or run inside tmux:
+7. **Reload config**
 
 ```bash
 tmux source-file ~/.config/tmux/tmux.conf
