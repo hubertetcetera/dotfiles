@@ -3,44 +3,33 @@
 1. **Install Ghostty**
    Follow the official installation instructions: [https://ghostty.org](https://ghostty.org)
 
-2. **Clone this repo**
+2. **Deploy via Stow**
+   This repo uses `.stowrc` with `--target=~/.config`. Run:
 
 ```bash
-git clone https://github.com/hubertetcetera/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-```
-
-3. **Install GNU Stow**
-
-```bash
-# macOS
-brew install stow
-
-# Debian/Ubuntu
-sudo apt install stow
-
-# Arch
-sudo pacman -S stow
-```
-
-4. **Deploy Ghostty config**
-
-```bash
+cd dotfiles
 stow ghostty
 ```
 
-This will create symlinks into Ghostty’s default config directory:
+This creates:
 
-- macOS → `~/Library/Application\ Support/com.mitchellh.ghostty/`
-- Linux → `~/.config/ghostty/`
-- Windows (experimental) → `%APPDATA%\ghostty\`
+```bash
+~/.config/ghostty/config -> dotfiles/ghostty/config
+~/.config/ghostty/themes -> dotfiles/ghostty/themes
+```
 
-5. **Fonts**
+3. **macOS users**
+   Ghostty does not use `~/.config` by default on macOS. You’ll need a one-time bridge linking
+   `~/Library/Application\ Support/com.mitchellh.ghostty/{config,themes}` to `~/.config/ghostty/...`.
+
+See the [README](../README) for details.
+
+3. **Fonts**
 
 For best results, install a Nerd Font such as [JetBrainsMono Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases).
 This ensures proper rendering of icons and glyphs.
 
-6. **Themes**
+4. **Themes**
 
 This setup uses the [Catppuccin](https://catppuccin.com/) Mocha theme.
 You can switch themes in the config file or add more under the `themes/` directory.
