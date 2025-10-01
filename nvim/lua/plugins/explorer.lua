@@ -3,6 +3,9 @@ return {
   "folke/snacks.nvim",
   opts = {
     session = { autoload = false }, -- keep your clean dashboard on plain `nvim`
+    picker = {
+      hidden = true,
+    },
   },
   init = function()
     local ok, Snacks = pcall(require, "snacks")
