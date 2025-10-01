@@ -7,6 +7,32 @@ return {
       hidden = true,
     },
   },
+  keys = {
+    {
+      "<leader>fa",
+      function()
+        require("snacks").picker.files({
+          cwd = require("lazyvim.util").root.get(), -- project root
+          hidden = true,
+          respect_gitignore = false,
+          title = "All Files",
+        })
+      end,
+      desc = "Find All Files (root)",
+    },
+    {
+      "<leader>fA",
+      function()
+        require("snacks").picker.files({
+          cwd = vim.loop.cwd(), -- current working dir
+          hidden = true,
+          respect_gitignore = false,
+          title = "All Files",
+        })
+      end,
+      desc = "Find All Files (cwd)",
+    },
+  },
   init = function()
     local ok, Snacks = pcall(require, "snacks")
     if not ok then
