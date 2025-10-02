@@ -31,5 +31,5 @@ export RUSTC_WRAPPER=sccache
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # zoxide
-eval "$(zoxide init zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
