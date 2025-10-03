@@ -16,6 +16,7 @@
         [ 
          pkgs.neovim
          pkgs.tmux
+         pkgs.ghostty
         ];
 
       # Necessary for using flakes on this system.
