@@ -1,6 +1,13 @@
 PS1="%1~ → "
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+if command -v brew >/dev/null; then
+  BREW_PREFIX=$(brew --prefix)
+  [ -f "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
+    source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  [ -f "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
+    source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
 bindkey '^w' autosuggest-execute
 bindkey '^e' autosuggest-accept
 bindkey '^u' autosuggest-toggle
@@ -31,5 +38,6 @@ export RUSTC_WRAPPER=sccache
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # zoxide
-eval "$(zoxide init --cmd cd zsh)"
-
+if command -v zoxide >/dev/null; then
+  eval "$(zoxide init --cmd cd zsh)"
+fi
