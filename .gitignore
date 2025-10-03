@@ -2,3 +2,5 @@
 tmux/plugins/
 fzf
 history.txt
+zshrc/.zsh_sessions
+zshrc/.zsh_history
