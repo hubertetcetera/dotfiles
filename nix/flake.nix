@@ -1,50 +1,86 @@
 {
-  description = "Meow nix-darwin system flake";
+  description = "Meow cross-platform flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs }:
-  let
-    configuration = { pkgs, ... }: {
-      # List packages installed in system profile. To search by name, run:
-      # $ nix-env -qaP | grep wget
-      environment.systemPackages =
-        [ 
-         pkgs.neovim
-         pkgs.tmux
-         pkgs.ghostty
-        ];
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager }: let
+    supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
+    forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
+  in {
+    darwinConfigurations."meow" = nix-darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      modules = [
+        {
+          nixpkgs.hostPlatform = "aarch64-darwin";
 
-      # Necessary for using flakes on this system.
-      nix.settings.experimental-features = "nix-command flakes";
+          nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-      # Create /etc/zshrc that loads the nix-darwin environment.
-      programs.zsh.enable = true;
-      # programs.fish.enable = true;
+          environment.systemPackages = with nixpkgs.legacyPackages.aarch64-darwin; [
+            neovim
+            tmux
+            rustup
+            docker
+            stow
+            zoxide
+            nodejs
+            pkgs.nerd-fonts.jetbrains-mono
+            # ghostty is NOT available via nixpkgs on macOS
+          ];
 
-      # Set Git commit hash for darwin-version.
-      system.configurationRevision = self.rev or self.dirtyRev or null;
+          programs.zsh.enable = true;
 
-      # Used for backwards compatibility, please read the changelog before changing.
-      # $ darwin-rebuild changelog
-      system.stateVersion = 6;
+          # Homebrew casks for mac-only tools
+          homebrew = {
+            enable = true;
+            casks = [
+              "ghostty"
+              "aerospace"
+              "sf-symbols"
+              "raycast"
+              "arc"
+            ];
+          };
 
-      # The platform the configuration will be used on.
-      nixpkgs.hostPlatform = "aarch64-darwin";
+          system.configurationRevision = self.rev or self.dirtyRev or null;
+          system.stateVersion = 6;
+        }
+      ];
     };
-  in
-  {
-    # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#simple
-    darwinConfigurations."beltsnbraces" = nix-darwin.lib.darwinSystem {
-      modules = [ configuration ];
-    };
 
-  # Expose the package set, including overlays for convenience.
-  darwinPackages = self.darwinConfigurations."beltsnbraces".pkgs;
+    # Optional: future homeManager configurations can go here
+    # homeConfigurations.username = home-manager.lib.homeManagerConfiguration { ... };
+
+    # Shared devShell for both macOS and Linux
+    devShells = forAllSystems (system: let
+      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+    in {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          neovim
+          tmux
+          rustup
+          docker
+          stow
+          zoxide
+          nodejs
+          pnpm
+          pkgs.nerd-fonts.jetbrains-mono
+        ] ++ (if pkgs.stdenv.isLinux then [
+          ghostty
+          i3
+          polybar
+        ] else []);
+
+        shellHook = ''
+          echo "🐧 Cross-platform shell ready on ${system}"
+        '';
+      };
+    });
   };
 }
