@@ -18,15 +18,15 @@
     mkHomeConfig = pkgs: {
       # Declaratively manage dotfiles (replaces stow)
       home.file = {
-        ".zshrc".source = ./zshrc;
-        ".config/nvim".source = ./nvim;
-        ".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
-        ".config/tmux/tmux.reset.conf".source = ./tmux/tmux.reset.conf;
-        ".config/ghostty/config".source = ./ghostty/config;
-        ".config/ghostty/themes".source = ./ghostty/themes;
-        ".config/aerospace/aerospace.toml".source = ./aerospace/aerospace.toml;
-        ".hammerspoon".source = ./hammerspoon;
-        ".config/sketchybar".source = ./sketchybar;
+        # ".zshrc".source = ./zshrc;
+        # ".config/nvim".source = ./nvim;
+        # ".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
+        # ".config/tmux/tmux.reset.conf".source = ./tmux/tmux.reset.conf;
+        # ".config/ghostty/config".source = ./ghostty/config;
+        # ".config/ghostty/themes".source = ./ghostty/themes;
+        # ".config/aerospace/aerospace.toml".source = ./aerospace/aerospace.toml;
+        # ".hammerspoon".source = ./hammerspoon;
+        # ".config/sketchybar".source = ./sketchybar;
       };
 
       # Programs managed by Home Manager
@@ -45,7 +45,7 @@
 
       home.username = username;
       home.homeDirectory = homeDirectory;
-      home.stateVersion = "23.11"; # Set to a recent version
+      home.stateVersion = "25.05";
     };
 
     homeConfigurations = {
@@ -79,8 +79,8 @@
           nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
           environment.systemPackages = with nixpkgs.legacyPackages.aarch64-darwin; [
-            rustup
             docker
+            rustup
             # Add any other core system-level tools here
           ];
 
