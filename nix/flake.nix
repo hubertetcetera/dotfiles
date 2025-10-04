@@ -114,7 +114,7 @@
             "show-recents" = false;
             tilesize = 64;
             persistent-apps = [
-              { app = "/System/Applications/Launchpad.app"; }      # apps library
+              { app = "/System/Applications/Apps.app"; }      # apps library
               { app = "/Applications/Arc.app"; }
               { app = "/System/Applications/System Settings.app"; }
               { app = "/Applications/Ghostty.app"; }
