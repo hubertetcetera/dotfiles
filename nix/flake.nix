@@ -12,6 +12,8 @@
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager }: let
     supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
     forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
+
+    username = builtins.getEnv "USER";
   in {
     darwinConfigurations."meow" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
@@ -29,7 +31,7 @@
             stow
             zoxide
             nodejs
-            pkgs.nerd-fonts.jetbrains-mono
+            nerd-fonts.jetbrains-mono
             # ghostty is NOT available via nixpkgs on macOS
           ];
 
@@ -47,6 +49,7 @@
             ];
           };
 
+          system.primaryUser = username;
           system.configurationRevision = self.rev or self.dirtyRev or null;
           system.stateVersion = 6;
         }
@@ -70,7 +73,7 @@
           zoxide
           nodejs
           pnpm
-          pkgs.nerd-fonts.jetbrains-mono
+          nerd-fonts.jetbrains-mono
         ] ++ (if pkgs.stdenv.isLinux then [
           ghostty
           i3
