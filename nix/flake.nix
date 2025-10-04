@@ -14,28 +14,75 @@
     forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
 
     username = builtins.getEnv "USER";
+    homeDirectory = "/Users/${username}";
+    mkHomeConfig = pkgs: {
+      # Declaratively manage dotfiles (replaces stow)
+      home.file = {
+        ".zshrc".source = ./zshrc;
+        ".config/nvim".source = ./nvim;
+        ".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
+        ".config/tmux/tmux.reset.conf".source = ./tmux/tmux.reset.conf;
+        ".config/ghostty/config".source = ./ghostty/config;
+        ".config/ghostty/themes".source = ./ghostty/themes;
+        ".config/aerospace/aerospace.toml".source = ./aerospace/aerospace.toml;
+        ".hammerspoon".source = ./hammerspoon;
+        ".config/sketchybar".source = ./sketchybar;
+      };
+
+      # Programs managed by Home Manager
+      programs.zsh.enable = true;
+      programs.tmux.enable = true;
+
+      # User-level packages
+      home.packages = with pkgs; [
+        neovim
+        tmux
+        zoxide
+        stow
+        nodejs
+        nerd-fonts.jetbrains-mono
+      ];
+
+      home.username = username;
+      home.homeDirectory = homeDirectory;
+      home.stateVersion = "23.11"; # Set to a recent version
+    };
+
+    homeConfigurations = {
+      "${username}@meow" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
+        modules = [ (mkHomeConfig nixpkgs.legacyPackages.aarch64-darwin) ];
+      };
+      
+      "${username}@linux-desktop" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ (mkHomeConfig nixpkgs.legacyPackages.x86_64-linux) ];
+      };
+    };
   in {
     darwinConfigurations."meow" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
+        home-manager.darwinModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.${username} = {
+            imports = [
+              self.homeConfigurations."${username}@meow".options.home.activation.setupUser
+            ];
+          };
+        }
         {
           nixpkgs.hostPlatform = "aarch64-darwin";
 
           nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
           environment.systemPackages = with nixpkgs.legacyPackages.aarch64-darwin; [
-            neovim
-            tmux
             rustup
             docker
-            stow
-            zoxide
-            nodejs
-            nerd-fonts.jetbrains-mono
-            # ghostty is NOT available via nixpkgs on macOS
+            # Add any other core system-level tools here
           ];
-
-          programs.zsh.enable = true;
 
           # Homebrew casks for mac-only tools
           homebrew = {
@@ -56,9 +103,6 @@
       ];
     };
 
-    # Optional: future homeManager configurations can go here
-    # homeConfigurations.username = home-manager.lib.homeManagerConfiguration { ... };
-
     # Shared devShell for both macOS and Linux
     devShells = forAllSystems (system: let
       pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
@@ -76,8 +120,6 @@
           nerd-fonts.jetbrains-mono
         ] ++ (if pkgs.stdenv.isLinux then [
           ghostty
-          i3
-          polybar
         ] else []);
 
         shellHook = ''
