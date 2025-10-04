@@ -91,6 +91,7 @@
           # Homebrew casks for mac-only tools
           homebrew = {
             enable = true;
+            taps = [ "nikitabobko/tap" ];
             casks = [
               "ghostty"
               "aerospace"
@@ -98,8 +99,31 @@
               "raycast"
               "arc"
             ];
+            # ensure casks land in /Applications (not ~/Applications or “Nix Apps”)
+            caskArgs.appdir = "/Applications";
+            onActivation = {
+              autoUpdate = true;
+              cleanup = "zap";
+            };
+            brews = [ "dockutil" ];
           };
+          system.activationScripts.setDock.text = ''
+          # remove all app tiles (keeps “Downloads” etc. untouched)
+          /opt/homebrew/bin/dockutil --remove all --no-restart || true
 
+          # add apps in order (only if they actually exist)
+          add_if() {
+            [ -e "$1" ] && /opt/homebrew/bin/dockutil --add "$1" --no-restart
+          }
+
+          add_if "/System/Applications/Launchpad.app"
+          add_if "/Applications/Arc.app"
+          add_if "/System/Applications/System Settings.app"
+          add_if "/Applications/Ghostty.app"
+
+          # restart Dock to apply
+          killall Dock || true
+        '';
           system.primaryUser = username;
           system.configurationRevision = self.rev or self.dirtyRev or null;
           system.stateVersion = 6;
@@ -109,12 +133,6 @@
             autohide = true;
             "show-recents" = false;
             tilesize = 64;
-            persistent-apps = [
-            "/System/Applications/Launchpad.app"
-            "/Applications/Arc.app"
-            "/System/Applications/System Settings.app"
-            "/Applications/Ghostty.app"
-            ];
           };
         }
       ];
