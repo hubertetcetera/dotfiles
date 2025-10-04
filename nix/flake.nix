@@ -43,6 +43,7 @@
         neovim
         tmux
         zoxide
+        fzf
         stow
         nodejs
         nerd-fonts.jetbrains-mono
@@ -135,6 +136,7 @@
           docker
           stow
           zoxide
+          fzf
           nodejs
           pnpm
           nerd-fonts.jetbrains-mono
