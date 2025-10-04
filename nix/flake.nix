@@ -23,20 +23,20 @@
       );
       # Declaratively manage dotfiles (replaces stow)
       home.file = {
-        # ".zshrc".source = ./zshrc;
-        # ".config/nvim".source = ./nvim;
-        # ".config/tmux/tmux.conf".source = ./tmux/tmux.conf;
-        # ".config/tmux/tmux.reset.conf".source = ./tmux/tmux.reset.conf;
-        # ".config/ghostty/config".source = ./ghostty/config;
-        # ".config/ghostty/themes".source = ./ghostty/themes;
-        # ".config/aerospace/aerospace.toml".source = ./aerospace/aerospace.toml;
-        # ".hammerspoon".source = ./hammerspoon;
-        # ".config/sketchybar".source = ./sketchybar;
+        ".zshrc".source = ../zshrc;
+        ".config/nvim".source = ../nvim;
+        ".config/tmux/tmux.conf".source = ../tmux/tmux.conf;
+        ".config/tmux/tmux.reset.conf".source = ../tmux/tmux.reset.conf;
+        ".config/ghostty/config".source = ../ghostty/config;
+        ".config/ghostty/themes".source = ../ghostty/themes;
+        ".config/aerospace/aerospace.toml".source = ../aerospace/aerospace.toml;
+        ".hammerspoon".source = ../hammerspoon;
+        ".config/sketchybar".source = ../sketchybar;
       };
 
       # Programs managed by Home Manager
-      programs.zsh.enable = true;
-      programs.tmux.enable = true;
+      # programs.zsh.enable = true;
+      # programs.tmux.enable = true;
 
       # User-level packages
       home.packages = with pkgs; [
