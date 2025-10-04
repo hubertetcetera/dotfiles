@@ -13,9 +13,19 @@
     supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
     forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
 
-    username = builtins.getEnv "USER";
-    homeDirectory = "/Users/${username}";
+    lib = nixpkgs.lib;
+    username = let
+      su = builtins.getEnv "SUDO_USER";
+      u  = builtins.getEnv "USER";
+    in if su != null && su != "" then su
+       else if u  != null && u  != "" then u
+       else "etcetera";
+
     mkHomeConfig = pkgs: {
+      home.username = lib.mkForce username;
+      home.homeDirectory = lib.mkForce (
+        if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}"
+      );
       # Declaratively manage dotfiles (replaces stow)
       home.file = {
         # ".zshrc".source = ./zshrc;
@@ -43,10 +53,9 @@
         nerd-fonts.jetbrains-mono
       ];
 
-      home.username = username;
-      home.homeDirectory = homeDirectory;
       home.stateVersion = "25.05";
     };
+  in {
 
     homeConfigurations = {
       "${username}@meow" = home-manager.lib.homeManagerConfiguration {
@@ -59,7 +68,6 @@
         modules = [ (mkHomeConfig nixpkgs.legacyPackages.x86_64-linux) ];
       };
     };
-  in {
     darwinConfigurations."meow" = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -67,11 +75,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.${username} = {
-            imports = [
-              self.homeConfigurations."${username}@meow".options.home.activation.setupUser
-            ];
-          };
+          home-manager.users.${username} = mkHomeConfig nixpkgs.legacyPackages.aarch64-darwin;
         }
         {
           nixpkgs.hostPlatform = "aarch64-darwin";
@@ -99,6 +103,19 @@
           system.primaryUser = username;
           system.configurationRevision = self.rev or self.dirtyRev or null;
           system.stateVersion = 6;
+        }
+        {
+          system.defaults.dock = {
+            autohide = true;
+            "show-recents" = false;
+            tilesize = 64;
+            persistent-apps = [
+            "/System/Applications/Launchpad.app"
+            "/Applications/Arc.app"
+            "/System/Applications/System Settings.app"
+            "/Applications/Ghostty.app"
+            ];
+          };
         }
       ];
     };

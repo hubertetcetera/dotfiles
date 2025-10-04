@@ -8,5 +8,6 @@ Set your username as an environment variable
 
 ```bash
 export USER=$(whoami)
+nix run nix-darwin -- switch --flake .#meow
 sudo darwin-rebuild switch --flake .#meow
 ```
