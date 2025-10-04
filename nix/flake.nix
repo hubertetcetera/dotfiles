@@ -14,12 +14,7 @@
     forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
 
     lib = nixpkgs.lib;
-    username = let
-      su = builtins.getEnv "SUDO_USER";
-      u  = builtins.getEnv "USER";
-    in if su != null && su != "" then su
-       else if u  != null && u  != "" then u
-       else "etcetera";
+    username = "etcetera";
 
     mkHomeConfig = pkgs: {
       home.username = lib.mkForce username;
