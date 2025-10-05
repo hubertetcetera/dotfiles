@@ -30,7 +30,7 @@ Navigate to the directory containing your `flake.nix` (e.g., `cd nix`).
 
 ```bash
 # 1) Install the CLI for your user
-nix profile install nix-darwin#darwin-rebuild
+nix profile --extra-experimental-features 'nix-command flakes' add nix-darwin#darwin-rebuild
 
 # 2) Try as user; if activation demands root, rerun with sudo
 darwin-rebuild switch --flake .#meow
