@@ -123,7 +123,7 @@
               { app = "/Applications/Ghostty.app"; }
             ];
           };
-          security.pam.enableSudoTouchIdAuth = true;
+          security.pam.services.sudo_local.touchIdAuth = true;
           system.defaults.screencapture.location = "~/Pictures/screenshots";
         }
       ];
