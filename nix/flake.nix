@@ -142,6 +142,9 @@
           fzf
           nodejs
           pnpm
+          tree
+          jq
+          xh
           nerd-fonts.jetbrains-mono
         ] ++ (if pkgs.stdenv.isLinux then [
           ghostty
