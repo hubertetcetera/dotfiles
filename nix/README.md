@@ -22,8 +22,6 @@ This repository assumes your flake.nix is in a subdirectory (e.g., `./nix/`).
    sed -i '' "s@etcetera@$(whoami)@g" flake.nix
    ```
 
-Make sure to restart your terminal or source your shell configuration file to apply the changes before running the next command.
-
 ## 2. Initial Configuration and Subsequent Updates
 
 Run the system activation script. Since this involves system-level changes (like installing packages and setting up services), it **MUST** be run with `sudo`.
@@ -31,8 +29,11 @@ Run the system activation script. Since this involves system-level changes (like
 Navigate to the directory containing your `flake.nix` (e.g., `cd nix`).
 
 ```bash
-# This single command handles BOTH the initial bootstrap and all subsequent updates.
-# It uses the 'darwin-rebuild' application defined within our own flake.
-sudo nix run --extra-experimental-features "nix-command flakes" .#darwin-rebuild -- switch
+sudo nix run --experimental-features "nix-command flakes" nix-darwin -- switch --flake .#meow
+```
 
+Make sure to restart your terminal or source your shell configuration file to apply the changes before running the next command.
+
+```bash
+sudo darwin-rebuild switch --flake .#meow
 ```

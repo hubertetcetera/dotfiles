@@ -16,8 +16,6 @@
     lib = nixpkgs.lib;
     username = "etcetera";
 
-    darwinConfig = self.darwinConfigurations."meow";
-
     mkHomeConfig = pkgs: {
       home.username = lib.mkForce username;
       home.homeDirectory = lib.mkForce (
@@ -127,14 +125,6 @@
           system.defaults.screencapture.location = "~/Pictures/screenshots";
         }
       ];
-    };
-    apps."aarch64-darwin" = {
-      darwin-rebuild = {
-        type = "app";
-        program = "${darwinConfig.config.system.build.darwin-rebuild}/bin/darwin-rebuild";
-      };
-
-      default = self.apps.aarch64-darwin.darwin-rebuild;
     };
 
     # Shared devShell for both macOS and Linux
