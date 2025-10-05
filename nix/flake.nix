@@ -124,13 +124,17 @@
             ];
           };
           security.pam.enableSudoTouchIdAuth = true;
-          screencapture.location = "~/Pictures/screenshots";
+          system.defaults.screencapture.location = "~/Pictures/screenshots";
         }
       ];
     };
     apps."aarch64-darwin" = {
-      default = darwinConfig.config.system.build.darwin-rebuild;
-      darwin-rebuild = darwinConfig.config.system.build.darwin-rebuild;
+      darwin-rebuild = {
+        type = "app";
+        program = "${darwinConfig.config.system.build.darwin-rebuild}/bin/darwin-rebuild";
+      };
+
+      default = self.apps.aarch64-darwin.darwin-rebuild;
     };
 
     # Shared devShell for both macOS and Linux
