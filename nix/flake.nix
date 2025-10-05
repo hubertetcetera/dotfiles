@@ -106,7 +106,6 @@
               "arc"
               "cleanshot"
               "1password"
-              "1password-cli"
               "superhuman"
               "beeper"
               "obsidian"
@@ -125,7 +124,10 @@
               autoUpdate = true;
               cleanup = "zap";
             };
-            brews = [ "dockutil" ];
+            brews = [
+            "dockutil"
+            "1password-cli"
+            ];
           };
 
           system.primaryUser = username;
