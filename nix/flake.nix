@@ -95,6 +95,19 @@
               "raycast"
               "arc"
               "cleanshot"
+              "1password"
+              "1password-cli"
+              "superhuman"
+              "beeper"
+              "obsidian"
+              # "numi"
+              "mullvad-vpn"
+              # "cyberduck"
+              # "veracrypt"
+              "stremio"
+              "todoist-app"
+              "betterdisplay"
+              "fathom"
             ];
             # ensure casks land in /Applications (not ~/Applications or “Nix Apps”)
             caskArgs.appdir = "/Applications";
