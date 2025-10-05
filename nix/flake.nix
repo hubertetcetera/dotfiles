@@ -7,14 +7,16 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    walls.url = "github:hubertetcetera/walls-catppuccin-mocha";
+    walls.flake = false;  # repo doesn’t have a flake.nix
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager }: let
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, walls, ... }: let
     supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
     forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
 
     lib = nixpkgs.lib;
-    username = "etcetera";
+    username = "simple";
 
     mkHomeConfig = pkgs: {
       home.username = lib.mkForce username;
@@ -61,7 +63,11 @@
       
       "${username}@linux-desktop" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ (mkHomeConfig nixpkgs.legacyPackages.x86_64-linux) ];
+        extraSpecialArgs = { inherit inputs; };
+        modules = [
+        (mkHomeConfig nixpkgs.legacyPackages.x86_64-linux)
+        ./modules/walls.nix
+        ];
       };
     };
     darwinConfigurations."meow" = nix-darwin.lib.darwinSystem {
@@ -71,7 +77,11 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.${username} = mkHomeConfig nixpkgs.legacyPackages.aarch64-darwin;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.users.${username} = {
+          imports = [ (mkHomeConfig nixpkgs.legacyPackages.aarch64-darwin)
+          ./modules/walls.nix ];
+          };
         }
         {
           nixpkgs.hostPlatform = "aarch64-darwin";
@@ -138,6 +148,7 @@
           system.defaults.screencapture.location = "~/Pictures/screenshots";
         }
       ];
+      specialArgs = { inherit inputs username mkHomeConfig; };
     };
 
     # Shared devShell for both macOS and Linux
