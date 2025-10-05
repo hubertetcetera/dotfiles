@@ -23,7 +23,7 @@
       );
       # Declaratively manage dotfiles (replaces stow)
       home.file = {
-        ".zshrc".source = ../zshrc;
+        ".zshrc".source = ../zshrc/.zshrc;
         ".config/nvim".source = ../nvim;
         ".config/tmux/tmux.conf".source = ../tmux/tmux.conf;
         ".config/tmux/tmux.reset.conf".source = ../tmux/tmux.reset.conf;
