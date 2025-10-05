@@ -16,6 +16,8 @@
     lib = nixpkgs.lib;
     username = "etcetera";
 
+    darwinConfig = self.darwinConfigurations."meow";
+
     mkHomeConfig = pkgs: {
       home.username = lib.mkForce username;
       home.homeDirectory = lib.mkForce (
@@ -94,6 +96,7 @@
               "sf-symbols"
               "raycast"
               "arc"
+              "cleanshot"
             ];
             # ensure casks land in /Applications (not ~/Applications or “Nix Apps”)
             caskArgs.appdir = "/Applications";
@@ -120,8 +123,14 @@
               { app = "/Applications/Ghostty.app"; }
             ];
           };
+          security.pam.enableSudoTouchIdAuth = true;
+          screencapture.location = "~/Pictures/screenshots";
         }
       ];
+    };
+    apps."aarch64-darwin" = {
+      default = darwinConfig.config.system.build.darwin-rebuild;
+      darwin-rebuild = darwinConfig.config.system.build.darwin-rebuild;
     };
 
     # Shared devShell for both macOS and Linux
