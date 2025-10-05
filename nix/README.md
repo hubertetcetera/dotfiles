@@ -29,11 +29,15 @@ Run the system activation script. Since this involves system-level changes (like
 Navigate to the directory containing your `flake.nix` (e.g., `cd nix`).
 
 ```bash
-sudo nix run --experimental-features "nix-command flakes" nix-darwin -- switch --flake .#meow
+# 1) Install the CLI for your user
+nix profile install nix-darwin#darwin-rebuild
+
+# 2) Try as user; if activation demands root, rerun with sudo
+darwin-rebuild switch --flake .#meow
 ```
 
-Make sure to restart your terminal or source your shell configuration file to apply the changes before running the next command.
+If dock is missing icons after the first run, re-run the darwin-rebuild command:
 
 ```bash
-sudo darwin-rebuild switch --flake .#meow
+darwin-rebuild switch --flake .#meow
 ```
