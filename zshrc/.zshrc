@@ -7,6 +7,8 @@ IS_LINUX=$(uname | grep -qi 'linux' && echo true || echo false)
 
 # macOS‑only: brew + xcrun
 if [[ "$IS_MACOS" == "true" ]]; then
+  # Make brew always available
+  export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
   if command -v brew >/dev/null; then
     BREW_PREFIX=$(brew --prefix)
     [ -f "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
@@ -57,7 +59,8 @@ esac
 
 # Rust caching
 export RUSTC_WRAPPER=sccache
-
+# Cargo env (if exists)
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
