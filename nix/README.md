@@ -41,3 +41,14 @@ If dock is missing icons after the first run, re-run the darwin-rebuild command:
 ```bash
 darwin-rebuild switch --flake .#meow
 ```
+
+<div class="alert alert-warning">
+  <strong>Warning:</strong> If you encounter issues with Neovim after running the above commands with <code>sudo</code>, follow the steps below to fix permissions.
+
+```bash
+# 1) Take back ownership
+sudo chown -R "$USER":staff ~/.config/nvim ~/.local/share/nvim ~/.cache/nvim
+
+# 2) Make them writable by you
+chmod -R u+rwX ~/.config/nvim ~/.local/share/nvim ~/.cache/nvim
+```
