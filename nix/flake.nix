@@ -49,6 +49,7 @@
         stow
         nodejs
         nerd-fonts.jetbrains-mono
+        vivaldi
       ];
 
       home.stateVersion = "25.05";
@@ -103,7 +104,7 @@
               "aerospace"
               "sf-symbols"
               "raycast"
-              "arc"
+              "vivaldi"
               "cleanshot"
               "1password"
               "superhuman"
@@ -142,7 +143,7 @@
             tilesize = 64;
             persistent-apps = [
               { app = "/System/Applications/Apps.app"; }      # apps library
-              { app = "/Applications/Arc.app"; }
+              { app = "/Applications/Vivaldi.app"; }
               { app = "/System/Applications/System Settings.app"; }
               { app = "/Applications/Ghostty.app"; }
             ];
